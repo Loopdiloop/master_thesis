@@ -1,0 +1,135 @@
+# a,t
+
+# where to load the gainshifts from; one can also use:
+# parameter gain_e = ... and so on
+#gain file gainshifts_plain.dat
+gain file gainshifts_W186_final.dat
+
+# (constant fraction) cactus energy correction parameters for cactus time
+#parameter tnai_corr_enai = 0 1 0 0 // Default
+parameter tnai_corr_enai = 0.589716 16054.1 96.2308 -0.000373339 // tcorr for a,p (fit2)
+
+# (constant fraction) siri energy correction parameters for cactus time
+#parameter tnai_corr_esi  = 0 1 0 0  // Default
+parameter tnai_corr_esi = 8.7091 -66527.8 -491.714 9.78023e-5 // Siricorr, v1. (a,p). Drastisk, klipper under 1mev. AC har sagt hun foretrekker før.
+#parameter tnai_corr_esi =  41.8975 -280744 2112.21 -0.00131425 //v4?? Ok ,losning, ingen klipping, ganske saa rett.
+
+# Parameters for the range curve
+rangefile zrange_t.dat
+#rangefile zrange_a.dat
+#rangefile zrange_d.dat
+#rangefile zrange_p.dat
+
+# Cut of low-energy events by making a rectangle which is excluded
+# in the down, left corner of the banana. 
+# Contains E-minimum 1, DE-minimum 1, E-minimum 2, DE-minimum 2.
+# Including Z=1 particles:
+parameter ede_rect  = 500 250 30 500
+# Excluding Z=1 particles:
+#parameter ede_rect  = 500 2500 2000 2500
+
+# Thickness gate for proton banana
+# parameter thick_range = 82 12 0
+parameter thick_range = 125 15 0
+# parameter thick_range = 140 20 0
+# parameter thick_range = 276 75 0
+# parameter thick_range = 230 25 0
+
+# Thickness gate for 3He banana FIND D
+#parameter thick_range = 48 8 0
+
+# Thickness gate for alpha banana
+#parameter thick_range = 165 10 0
+#parameter thick_range = 48 5 0
+
+
+# Fit of Qkinz for tritons,
+#  186W (alpha, t gamma) 187Re, 30MeV. Strip 0-7 in that order.
+parameter ex_from_ede    = 1.4782102e+4 -1.006365 -8.33e-7 \
+1.4789398e+4 -1.005401 -8.47e-7 \
+1.4796227e+4 -1.004337 -8.63e-7 \
+1.4803241e+4 -1.003299 -8.76e-7 \
+1.4809785e+4 -1.002166 -8.91e-7 \
+1.4815178e+4 -1.000815 -9.14e-7 \
+1.4820732e+4 -0.999496 -9.34e-7 \
+1.4825760e+4 -0.998085 -9.56e-7
+
+# empirical excitation energy correction for the above, e.g. from known peaks
+parameter ex_corr_exp    = 43 0.95 \
+    63 0.95 \
+    48 0.95 \
+    45 0.95 \
+    58 0.95 \
+    54 0.95 \
+    51 0.95 \
+    51 0.95
+
+# empirical excitation energy correction for the above, e.g. from known peaks
+#parameter ex_corr_exp    =  0 1 \
+#    0 1 \
+#    0 1 \
+#    0 1 \
+#    0 1 \
+#    0 1 \
+#    0 1 \
+#    0 1
+
+#data directory Datafiles
+data directory ../master_data/raw
+#maximum number of buffers to read for each file; for testing
+#max_buffers 1
+
+#186W ALL FILES
+data file sirius-20160420-135618.data 
+data file sirius-20160420-171400.data 
+data file sirius-20160420-182451.data
+data file sirius-20160420-233716.data
+data file sirius-20160421-091709.data
+data file sirius-20160421-100724.data
+data file sirius-20160421-224045.data
+data file sirius-20160422-081940.data
+data file sirius-20160422-093300-big-000.data
+data file sirius-20160422-093300-big-001.data
+data file sirius-20160422-093300.data
+data file sirius-20160422-122054.data
+data file sirius-20160422-124416.data
+data file sirius-20160422-180843.data
+data file sirius-20160423-073059.data
+data file sirius-20160423-160731.data
+data file sirius-20160423-173835.data
+data file sirius-20160423-213756.data
+data file sirius-20160424-104217.data
+data file sirius-20160424-160703.data
+data file sirius-20160424-223103.data
+data file sirius-20160425-075414.data
+data file sirius-20160425-120131.data
+data file sirius-20160425-203224.data
+data file sirius-20160425-222023.data
+data file sirius-20160426-104456.data
+data file sirius-20160426-120853.data
+data file sirius-20160426-141446.data
+data file sirius-20160426-230123.data
+data file sirius-20160427-033555.data
+data file sirius-20160428-091134.data
+data file sirius-20160428-122211.data
+data file sirius-20160428-173419.data
+data file sirius-20160428-230248.data
+data file sirius-20160429-070605.data
+data file sirius-20160429-094446-big-000.data
+data file sirius-20160429-094446-big-001.data
+data file sirius-20160429-094446-big-002.data
+data file sirius-20160429-094446-big-003.data
+data file sirius-20160429-094446.data
+
+
+
+# Write to MAMA matrix 
+#export mama h_ex_f0 h_ex_f0_MAMA
+export mama m_alfna alfna
+#export mama m_alfna_bg alfna_bg
+
+# at the end, spectra are dumped to the root file
+# root output file
+export root W186_a_t_all_calib.root
+
+
