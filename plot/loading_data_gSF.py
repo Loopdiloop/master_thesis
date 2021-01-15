@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import json
+import sys
 
 
 
@@ -32,7 +33,7 @@ def load_a_d():
     a0_d = -0.8875
     a1_d = 0.2480
 
-    strength_nrm_d = np.genfromtxt("../d_mama/strength.nrm")
+    strength_nrm_d = np.genfromtxt("../mama_d/strength.nrm")
     strength_d = strength_nrm_d[:28]
     strength_err_d = strength_nrm_d[29:]
     n_d = len(strength_d)
@@ -42,7 +43,7 @@ def load_a_d():
         energy_d[i] = a0_d + a1_d*i
 
     # (a,d) extrapolation
-    trans_raw_d = np.genfromtxt("../d_mama/transext.nrm")
+    trans_raw_d = np.genfromtxt("../mama_d/transext.nrm")
     n_d_t=len(trans_raw_d)
     trans_d=np.zeros(n_d_t)
     energy_trans_d=np.zeros(n_d_t)
@@ -52,10 +53,14 @@ def load_a_d():
 
     #number of data points to ignore
     n_ign = 7 #ignore
-    a_d_data = np.zeros((len(energy_d)-n_ign-1,3))
-    a_d_data[:,0] = energy_d[n_ign:-1]
-    a_d_data[:,1] = strength_d[n_ign:-1]
-    a_d_data[:,2] = strength_err_d[n_ign:-2]
+    a_d_data = np.zeros((len(energy_d)-n_ign,3))
+    a_d_data[:,0] = energy_d[n_ign:]
+    a_d_data[:,1] = strength_d[n_ign:]
+    a_d_data[:,2] = strength_err_d[n_ign:-1]
+
+    print(a_d_data)
+    #sys.exit()
+    
     return a_d_data
 
 
@@ -67,7 +72,7 @@ def load_a_t():
     a0_t = -0.8875
     a1_t = 0.2480
 
-    strength_nrm_t = np.genfromtxt("../t_mama/strength.nrm")
+    strength_nrm_t = np.genfromtxt("../mama_t/strength.nrm")
     strength_t = strength_nrm_t[:26]
     strength_err_t = strength_nrm_t[27:]
     n_t = len(strength_t)
@@ -77,7 +82,7 @@ def load_a_t():
         energy_t[i] = a0_t + a1_t*i
 
     # (a,t) extrapolation
-    trans_raw_t = np.genfromtxt("../t_mama/transext.nrm")
+    trans_raw_t = np.genfromtxt("../mama_t/transext.nrm")
     n_d_t = len(trans_raw_t)
     trans_t = np.zeros(n_d_t)
     energy_trans_t = np.zeros(n_d_t)
@@ -95,7 +100,7 @@ def load_a_t():
 
 
 def load_data_187Re():
-    with open("data/187Re_photo_load1.json") as K:
+    with open("data/187Re.json") as K:
         data_187Re = json.load(K)
     datasets_187Re=data_187Re["datasets"]
 
@@ -158,7 +163,7 @@ def load_data_185Re():
 
 # ***************** Dataset 186W ***************************
 def load_data_186W():
-    with open("data/186W_load1.json") as J:
+    with open("data/186W.json") as J:
         data_186W = json.load(J)
     dataset_186W=data_186W["datasets"]
 

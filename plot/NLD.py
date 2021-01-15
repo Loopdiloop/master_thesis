@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-import sys
-sys.path.insert(1, '../')
-import colors_stylesheet as stylesheet
+import stylesheet
 
 # Counting NLD
+
+
+plt.figure(figsize=(11,7))
 
 def a_t():
     n = 28
@@ -14,9 +15,9 @@ def a_t():
     a0 = -0.8875
     a1 = 0.2480
 
-    rholev = np.genfromtxt("../t_mama/rholev.cnt")
-    rhopaw = np.genfromtxt("../t_mama/rhopaw.cnt")
-    fermigas = np.genfromtxt("../t_mama/fermigas.cnt")
+    rholev = np.genfromtxt("../mama_t/rholev.cnt")
+    rhopaw = np.genfromtxt("../mama_t/rhopaw.cnt")
+    fermigas = np.genfromtxt("../mama_t/fermigas.cnt")
 
     Bn = 7.360000
     Bnerr = 0.001
@@ -56,9 +57,9 @@ def a_d(): #color = green
     a0 = -0.8875
     a1 = 0.2480
 
-    rholev = np.genfromtxt("../d_mama/rholev.cnt")
-    rhopaw = np.genfromtxt("../d_mama/rhopaw.cnt")
-    fermigas = np.genfromtxt("../d_mama/fermigas.cnt")
+    rholev = np.genfromtxt("../mama_d/rholev.cnt")
+    rhopaw = np.genfromtxt("../mama_d/rhopaw.cnt")
+    fermigas = np.genfromtxt("../mama_d/fermigas.cnt")
 
     Bn = 5.871000
     Bnerr = 0.001
@@ -93,9 +94,9 @@ def a_d(): #color = green
 a_t()
 a_d()
 
-plt.title("NLD for 187 and 188 Re.", size=14)
-plt.ylabel("rho(E) [1/MeV]", size=12)
-plt.xlabel("Ex [MeV]", size=12)
+#plt.title("NLD for 187 and 188 Re.", size=18)
+plt.ylabel(r'$\rho$ (E) [MeV$^{-1}$]', size=18)
+plt.xlabel("E$_x$ [MeV]", size=18)
 plt.legend()
 plt.ylim(4., 1e8)
 plt.xlim(-1., 8.)

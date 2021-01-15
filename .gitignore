@@ -4,4 +4,17 @@ usersort/sorting
 usersort/user_sort.o
 
 
+plot/data/*.json
+
+mama_d/*.ps
+mama_d/*.pdf
+mama_d/*.eps
+
+mama_t/*.ps
+mama_t/*.pdf
+mama_t/*.eps
+
+**.png
+
+plot/arcdrc/**
 
