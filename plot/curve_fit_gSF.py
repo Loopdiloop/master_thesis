@@ -1,11 +1,8 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
-#from scipy.optimize import curve_fit
-#from scipy.stats import chisquare
-#from lmfit import Minimizer
-import lmfit
 
+import lmfit
 import json
 
 import loading_data_gSF as loading_data
@@ -18,7 +15,7 @@ from matplotlib.colors import LogNorm
 
 """
 Python script to fit (nuclear) curves to data.
-Requires Scipy, inspired by original which was made by Joergen E. Midtboe, University of Oslo 9/11/2015.
+Requires lmfit. Loosely inspired by original by Joergen E. Midtboe, University of Oslo 9/11/2015.
 
 Heavily revised and specialised by Marianne M. Bjoroen, Jan 2021. """
 
@@ -245,13 +242,6 @@ def f_residuals(parameters):
 
 results = lmfit.minimize(fcn=f_residuals, params=params, method="least_squares")
 
-print(results.success)
-print(results.errorbars)
-print(results.chisqr)
-print(results.redchi)
-print(results.params.pretty_print())
-
-
 print("Chi square: ", results.redchi)
 
 # Initialize figure!
@@ -261,8 +251,6 @@ ax = plt.subplot(111)
 
 # Actual best-fit curve
 # Extract values from the fit
-
-
 
 # Plot the total optimalized fit
 x_values_cont = np.linspace(0, 18, 1000)
@@ -337,27 +325,10 @@ for par, value in results.params.items():
     par_values.append(value.value)
     par_stderr.append(value.stderr) 
 
-#print(par_names, par_values, par_stderr)
-#print(p0_functions)
 
 
-print("""
-
-################################################
-
-
-
-""")
-
+# Print latex table:
 print(results.params.pretty_print())
-
-print("""
-
-################################################
-
-
-
-""")
 
 
 print("""\\begin{tabular}{llrrr}

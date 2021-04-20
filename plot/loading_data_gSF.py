@@ -3,7 +3,7 @@ import numpy as np
 import json
 import sys
 
-
+""" Loads data to other scripts. """
 
 
 def cs_to_gsf(Eg, data):
@@ -141,22 +141,6 @@ def load_data(path="../mama_d/recommended_values/", reaction="d", return_trans=F
         return data
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def load_data_187Re():
     with open("data/187Re.json") as K:
         data_187Re = json.load(K)
@@ -168,8 +152,6 @@ def load_data_187Re():
 
     gsf_dataset1 = cs_to_gsf(Eg_dataset1, gsf_dataset1)
     gsf_err_dataset1 = cs_to_gsf(Eg_dataset1, gsf_err_dataset1)
-
-    #plt.errorbar(Eg_dataset1, gsf_dataset1, yerr=gsf_err_dataset1, x_err=None, fmt="*-", color="#CA5518", label="187Re(g,x)")
 
     #number of data points to ignore
     n_ign = 0 #ignore
@@ -186,7 +168,6 @@ def load_data_187Re():
     gsf_dataset2 = cs_to_gsf(Eg_dataset2, gsf_dataset2)
     gsf_err_dataset2 = cs_to_gsf(Eg_dataset2, gsf_err_dataset2)
 
-    #plt.errorbar(Eg_dataset2, gsf_dataset2, yerr=gsf_err_dataset2, x_err=None, fmt="*-", color="#1A1118", label="187Re(g,x)")
     #number of data points to ignore
     n_ign = 1 #ignore
     re187_data2 = np.zeros((len(Eg_dataset2)-n_ign,3))
@@ -244,7 +225,7 @@ def load_data_ARCDRC(EorM, Z, A):
     """ EorM is a one character string of wether you want the M1 or E1
     Recommended input for the relevant data here:
     ALL E of Z-1 and Z+1 :
-    #### -rw-rw-r-- 1 marianne marianne  1371 juni  18  2019 fE1_exp_074_183_drc.dat
+    -rw-rw-r-- 1 marianne marianne  1371 juni  18  2019 fE1_exp_074_183_drc.dat
     -rw-rw-r-- 1 marianne marianne  1821 juni  18  2019 fE1_exp_074_184_arc.dat
     -rw-rw-r-- 1 marianne marianne  1371 juni  18  2019 fE1_exp_074_185_arc.dat
     -rw-rw-r-- 1 marianne marianne  1326 juni  18  2019 fE1_exp_074_187_arc.dat
@@ -257,10 +238,8 @@ def load_data_ARCDRC(EorM, Z, A):
     -rw-rw-r-- 1 marianne marianne  1551 juni  18  2019 fE1_exp_077_192_arc.dat
     -rw-rw-r-- 1 marianne marianne  1551 juni  18  2019 fE1_exp_077_194_arc.dat
 
-
-
     ALL M of Z +- 1: -------------------------
-    #### -rw-rw-r-- 1 marianne marianne   606 juni  18  2019 fM1_exp_074_183_drc.dat
+    -rw-rw-r-- 1 marianne marianne   606 juni  18  2019 fM1_exp_074_183_drc.dat
     -rw-rw-r-- 1 marianne marianne   831 juni  18  2019 fM1_exp_074_184_arc.dat
     -rw-rw-r-- 1 marianne marianne   606 juni  18  2019 fM1_exp_074_185_arc.dat
     -rw-rw-r-- 1 marianne marianne   876 juni  18  2019 fM1_exp_074_187_arc.dat

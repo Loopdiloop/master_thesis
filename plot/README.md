@@ -5,8 +5,6 @@ The scripst are not particurarly nice, but thay are, at the time of writing, ver
 Everything runs in python 3.8+. Curvefit dependent on lmfit.
 
 
-
-
 Python scripts of this folder:
 
 * Supporting files
@@ -36,8 +34,4 @@ Python scripts of this folder:
     matrix_plot.py - Loads and plots the alfna-matrices. 
 
     run_matrix_plot.py - Good at plotting several of the matrixes in matrix_plot.py, or plot cross sections of several matrices.
-
-
-
-
 

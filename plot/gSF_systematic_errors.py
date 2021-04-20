@@ -85,6 +85,7 @@ strength = data_rec[:,1]
 strength_err = data_rec[:,2]
 
 """
+# If you want to plot all approximations for visual control:
 plt.plot(energy, data_D0_high[:,1],label="D0_high")
 plt.plot(energy, data_D0_low[:,1],label="D0_low")
 plt.plot(energy, data_gamma_low[:,1],label="Gamma_low")
