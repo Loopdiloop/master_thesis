@@ -16,6 +16,8 @@ Calibration/ contains some calculations of calibration constants, but is probabl
 
 The folder scripts/, ironically, contains a single script to plot some of the scissors-resonance work.
 
+Edit: Forgot to mention usersort, but it does contain files and software for sorting the data. Any input, .root or raw file is available upon request.
+
 
 Thank you to all who have joined me on this wild ride to finish this. I appreciate you all.
 A special thank you to my dear main supervisor Ann-Cecilie, you have been great!
@@ -25,7 +27,3 @@ Any bug in the thesis is now a feature.
 
 Cheers, Marianne.
 
-
-
-Edit: Forgot to mention usersort, but it does contain files and software for sorting the data.
-  Any input, .root or raw file is available upon request.
