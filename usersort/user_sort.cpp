@@ -157,17 +157,20 @@ void UserXY::CreateSpectra()
         for(int f=0; f<8; ++f ) {
             m_e_de_individual[b][f] = 
                 Mat( ioprintf("m_e_de_b%df%d", b, f), ioprintf("#DeltaE : E detector %d strip %d", b, f),
-                     500, 0, max_e, "E(Si) [keV]", 500, 0, max_de, "#DeltaE(Si) [keV]" );
+                     2000, 0, max_e, "E(Si) [keV]", 2000, 0, max_de, "#DeltaE(Si) [keV]" );
+                     //500, 0, max_e, "E(Si) [keV]", 500, 0, max_de, "#DeltaE(Si) [keV]" ); \\ OLDD
                      //250, 0, max_e, "E(Si) [keV]", 250, 0, max_de, "#DeltaE(Si) [keV]" );// For 60Ni
             h_ede_individual[b][f] =
                 Spec( ioprintf("h_ede_b%df%d", b, f), ioprintf("E+#DeltaE detector %d strip %d", b, f),
-                      1000, 0, max_e, "E+#DeltaE [keV]" );
+                      2000, 0, max_e, "E+#DeltaE [keV]" );
+                      //1000, 0, max_e, "E+#DeltaE [keV]" );
         }
     }
 #endif /* MAKE_INDIVIDUAL_E_DE_PLOTS */
     for(int f=0; f<8; ++f ) {
         m_e_de_strip[f] = Mat( ioprintf("m_e_de_f%d", f), ioprintf("E(NaI) : E(Si) strip %d", f),
-                               1000, 0, max_e, "E(Si) [keV]", 1000, 0, max_de, "#DeltaE(Si) [keV]" );
+                            2000, 0, max_e, "E(Si) [keV]", 2000, 0, max_de, "#DeltaE(Si) [keV]" );
+                               //1000, 0, max_e, "E(Si) [keV]", 1000, 0, max_de, "#DeltaE(Si) [keV]" );
     }
 
     m_e_de = Mat( "m_e_de", "#DeltaE : E for all detectors together",
@@ -478,10 +481,12 @@ bool UserXY::Sort(const Event& event)
         // USED THIS FOR 5/2+ IN THESIS:::
         //if(e_int>6050 && e_int<7200 && de_int>1200 && de_int<1520){// gate on the 5/2+ level in 15N at Ex = 5270 keV
         
+        //THIS ONE:::
         //if((e_int>7930 && e_int<9030 && de_int>1040 && de_int<1300) || (e_int>6050 && e_int<7200 && de_int>1200 && de_int<1520)){ // gates on the 9/2+ peak in 19F and 5/2+ level in 15N at Ex = 5270 keV     
         //if(ex_int>500){  // Reduce the influence of the elastic peak  
         m_nai_e_t[id] ->Fill( na_e_int,  na_t_int );
         //}
+        
         //if(ex_int>8765 && ex_int<9000 && id<28) {     // gate on peak at 8904 keV in 28Si, only NaI
         //if(id<26){
         //if(ex_int>6085 && ex_int<6450){

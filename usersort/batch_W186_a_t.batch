@@ -64,18 +64,9 @@ parameter ex_corr_exp    = 43 0.95 \
     51 0.95 \
     51 0.95
 
-# empirical excitation energy correction for the above, e.g. from known peaks
-#parameter ex_corr_exp    =  0 1 \
-#    0 1 \
-#    0 1 \
-#    0 1 \
-#    0 1 \
-#    0 1 \
-#    0 1 \
-#    0 1
 
 #data directory Datafiles
-data directory ../master_data/raw
+data directory ../raw_data_186W
 #maximum number of buffers to read for each file; for testing
 #max_buffers 1
 

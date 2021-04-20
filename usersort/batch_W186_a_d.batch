@@ -11,7 +11,7 @@ parameter tnai_corr_enai = 0.589716 16054.1 96.2308 -0.000373339 // tcorr for a,
 
 # (constant fraction) siri energy correction parameters for cactus time
 #parameter tnai_corr_esi  = 0 1 0 0  // Default
-parameter tnai_corr_esi = 8.7091 -66527.8 -491.714 9.78023e-5 // Siricorr, v1. (a,p). Drastisk, klipper under 1mev. AC har sagt hun foretrekker før.
+parameter tnai_corr_esi = 8.7091 -66527.8 -491.714 9.78023e-5 // Siricorr, v1. (a,p). Drastisk, klipper under 1mev.
 #parameter tnai_corr_esi =  41.8975 -280744 2112.21 -0.00131425 //v4?? Ok ,losning, ingen klipping, ganske saa rett.
 
 # Parameters for the range curve, 3He or alpha
@@ -65,7 +65,7 @@ parameter ex_corr_exp    =  0 1 \
 
 
 #data directory Datafiles
-data directory ../master_data/raw
+data directory ../raw_data_186W
 #maximum number of buffers to read for each file; for testing
 #max_buffers 1
 

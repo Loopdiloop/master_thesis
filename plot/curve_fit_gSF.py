@@ -1,12 +1,20 @@
 import matplotlib.pyplot as plt
+import matplotlib
 import numpy as np
-from scipy.optimize import curve_fit
+#from scipy.optimize import curve_fit
+#from scipy.stats import chisquare
+#from lmfit import Minimizer
+import lmfit
+
 import json
 
 import loading_data_gSF as loading_data
 import stylesheet
 
 import scipy.stats as stats
+import sys
+
+from matplotlib.colors import LogNorm
 
 """
 Python script to fit (nuclear) curves to data.
@@ -35,25 +43,33 @@ def GLO(E, T, E0, Gamma0, sigma0):
     user INPUT here :)
 """
 # debug mode will plot the initial, optimised and bounds-values to evaluate input.
-debug_mode = True
+debug_mode = 1
+debug_mode_old = 0
 
 # d or t, to choose between which data to use.
-reaction = "t"
+try:
+    reaction = str(sys.argv[1])
+except:
+    reaction = "d"
+print(reaction)
 
 # Plot additional data?
-plot_ARC = False
+plot_ARC = 0
 
 # p0 are the initial values used for the fit. 
 # Values are T, E0, Gamma0, sigma0, E1, Gamma1, ... etc
 # p0_functions are which function(s) to use. At least 1, and 5 is current maximum.
 if reaction == "d":
-    p0 = [0.9, 13.38, 4.2, 445, 15.9, 5.0, 664, 8.8, 0.6, 20, 4.9, 1.0, 15]
-    p0_functions = [GLO, GLO, SLO, SLO]
+    p0 = [0.9,   5.3, 1.0, 15,   8.8, 0.6, 20,  13.38, 4.2, 445,  15.9, 5.0, 664]
+    p0_functions = [GLO, GLO, GLO, GLO]
+    p0_functions_names = ["SLO1", "SLO2", "GLO1", "GLO2"]
+    nuclei = "188Re"
 
 elif reaction == "t":
-    p0 = [0.9, 13.0, 3.0, 300, 15.9, 5.0, 664, 8.8, 0.6, 20, 5.33, 1.35, 6.0]#4.9, 0.4, 10]#, 0.8, 0.02, 0.4]
-    p0_functions = [GLO, GLO, SLO, SLO]
-
+    p0 = [0.9,   5.034, 0.3944, 7.595,   8.8, 0.6, 20,  13.0, 3.0, 300,    15.9, 5.5, 664]#      5.33, 1.35, 6.0]#4.9, 0.4, 10]#, 0.8, 0.02, 0.4]
+    p0_functions = [SLO, SLO, GLO, GLO]
+    p0_functions_names = ["SLO1", "SLO2", "GLO1", "GLO2"]
+    nuclei = "187Re"
 else:
     raise Exception("Error, faulty input. Choose reaction = d or t.")
 
@@ -67,23 +83,55 @@ Running for %s
 
 # Restrain values by adding limits :)
 minimum = np.array(p0)*0.3
-maximum = np.array(p0)*3.5
-if reaction == "t": #Lock the lowest SLO to the (a,d)-values :)
-    optimised_peak_d = np.array([5.25883814, 0.89443272, 8.09219054]) #Best from previous runs.
-    p0[10:] = optimised_peak_d
-    minimum[10:] = optimised_peak_d - 1e-5
-    maximum[10:] = optimised_peak_d + 1e-5
-bounds = [minimum, maximum]
+maximum = np.array(p0)*2.5
+
+params = lmfit.Parameters()
+
+if reaction == "t":
+    params.add_many(("T", p0[0], True, minimum[0], maximum[0]),
+        ("E0",     5.152, False, minimum[1], maximum[1]),
+        ("Gamma0", 0.4257, False, minimum[2], maximum[2]),
+        ("Sigma0", 12.25, False, minimum[3], maximum[3]),
+        ("E1",     p0[4], True, minimum[4], maximum[4]),
+        ("Gamma1", p0[5], True, minimum[5], maximum[5]),
+        ("Sigma1", p0[6], True, minimum[6], maximum[6]),
+        ("E2",     p0[7], True, minimum[7], maximum[7]),
+        ("Gamma2", p0[8], True, minimum[8], maximum[8]),
+        ("Sigma2", p0[9], True, minimum[9], maximum[9]),
+        ("E3",     p0[10], True, minimum[10], maximum[10]),
+        ("Gamma3", p0[11], True, minimum[11], maximum[11]),
+        ("Sigma3", p0[12], True, minimum[12], maximum[12]))
+
+elif reaction == "d":
+    params.add_many(("T", p0[0], True, minimum[0], maximum[0]),
+    ("E0",     p0[1], True, minimum[1], maximum[1]),
+    ("Gamma0", p0[2], True, minimum[2], maximum[2]),
+    ("Sigma0", p0[3], True, minimum[3], maximum[3]),
+    ("E1",     p0[4], True, minimum[4], maximum[4]),
+    ("Gamma1", p0[5], True, minimum[5], maximum[5]),
+    ("Sigma1", p0[6], True, minimum[6], maximum[6]),
+    ("E2",     p0[7], True, minimum[7], maximum[7]),
+    ("Gamma2", p0[8], True, minimum[8], maximum[8]),
+    ("Sigma2", p0[9], True, minimum[9], maximum[9]),
+    ("E3",     p0[10], True, minimum[10], maximum[10]),
+    ("Gamma3", p0[11], True, minimum[11], maximum[11]),
+    ("Sigma3", p0[12], True, minimum[12], maximum[12]))
+
+else: 
+    print("errrrr")
+
+print(params.pretty_print())
 
 
-# == Import data ==
+
+# ================= Import data ==
 # Import data as matrices
 
 # Exfor and earlier data: (i.e. need either way)
 data_re187_1, data_re187_2 = loading_data.load_data_187Re()
 # I suspect some of the uncertanties are "too good." Boost them up here.
-data_re187_1[:,2] = data_re187_1[:,2]*1.5
-data_re187_2[:,2] = data_re187_2[:,2]*1.5
+data_re187_1[:,2] = data_re187_1[:,2]*1.5#1.6
+data_re187_2[:,2] = data_re187_2[:,2]*1.5#1.6
 
 data_re185 = loading_data.load_data_185Re()
 data_w186 = loading_data.load_data_186W()
@@ -115,7 +163,7 @@ data_arc_M_Os191 = loading_data.load_data_ARCDRC("M", 76, 191)
 if reaction == "d":
     # From this experiment:
     data = loading_data.load_a_d()
-    
+    data=data[:-1]
     # Stack everything together into one matrix for fitting.
     data_all = np.vstack((data, data_re187_1))
     data_all = np.vstack((data_all, data_re187_2))
@@ -124,6 +172,8 @@ if reaction == "d":
 
     #Consistent color coding.
     maincolor = stylesheet.d_color_data
+
+    Sn = 5.871
 
 elif reaction =="t":
     # From this experiment:
@@ -136,42 +186,10 @@ elif reaction =="t":
     #Consistent color coding.
     maincolor = stylesheet.t_color_data
 
+    Sn = 7.360
+
 else:
     raise Exception("Error. This is not yet functionality.")
-
-
-# The actual total function that is fitted. Uses a sum of p0_functions with the parameter from the initial p0.
-# p0-parameters has bounds according to bounds.
-def f(E, Temp, E0=1, Gamma0=1, sigma0=1, E1=1, Gamma1=1, sigma1=1, 
-        E2=1, Gamma2=1, sigma2=1, E3=1, Gamma3=1, sigma3=1, 
-        E4=1, Gamma4=1, sigma4=1,functions=p0_functions):
-    """ make_fit currently supports up to 5 GLO/SLOs. To add more, continue the pattern. This 
-    was, suprisingly, the best solution I found atm working with the scipy-syntax. """
-
-    # For calling with an array when plotting:
-    if type(Temp) == list:
-        print("list!")
-        T=Temp[0]
-        EX = np.ones(5)
-        Gamma = np.ones(5)
-        sigma = np.ones(5)
-        for j in range(int((len(Temp)-1)/3)):
-            EX[j] = Temp[j+1]
-            Gamma[j] = Temp[j+2]
-            sigma[j] = Temp[j+3]
-    
-    # For the fitting algorithm
-    else: 
-        T = Temp
-        EX = np.array([E0, E1, E2, E3, E4])
-        Gamma = np.array([Gamma0, Gamma1, Gamma2, Gamma3, Gamma4])
-        sigma = np.array([sigma0, sigma1, sigma2, sigma3, sigma4])
-
-    # Calculating the sum of the singular GLOs
-    output = np.zeros(len(E))
-    for i in range(len(functions)):
-        output += functions[i](E, T, EX[i], Gamma[i], sigma[i])
-    return output
 
 
 
@@ -180,55 +198,92 @@ def f(E, Temp, E0=1, Gamma0=1, sigma0=1, E1=1, Gamma1=1, sigma1=1,
 # Documentation of curve_fit from scipy:
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
 
-popt, pcov = curve_fit(f=f, xdata=data_all[:,0], ydata=data_all[:,1], p0=p0, sigma=data_all[:,2], 
-    maxfev=100000,bounds=bounds)
 
-print("Fitted values: ", popt)
-
-printing_param = popt[1:]
-for i in range(0,len(p0_functions)):
-    a,b,c=printing_param[i*3:i*3 + 3]
-    print("& XLO & %.3f & %.3f & %.3f \\ \\"%(a,b,c) )
+x_value = data_all[:,0]
+y_value = data_all[:,1]
+y_error = data_all[:,2]
 
 
-# Calc std. deviation from the covariance (from documentation):
-perr = np.sqrt(np.diag(pcov))
+# The actual total function that is fitted. Uses a sum of p0_functions with the parameter from the initial p0.
+# p0-parameters has bounds according to bounds.
+def f_fit_total(par, E = x_value):
+    """ make_fit currently supports up to 5 GLO/SLOs. To add more, continue the pattern. This 
+    was, suprisingly, the best solution I found atm working with the scipy-syntax. """
+
+    functions = p0_functions
+
+    T = par["T"]
+    EX = np.array([par["E0"], par["E1"], par["E2"], par["E3"]])#, par["E4"])
+    Gamma = np.array([par["Gamma0"], par["Gamma1"], par["Gamma2"], par["Gamma3"]])#, Gamma4])
+    sigma = np.array([par["Sigma0"], par["Sigma1"], par["Sigma2"], par["Sigma3"]])#, sigma4])
+
+    # Calculating the sum of the singular GLOs
+    output = np.zeros(len(E))
+    for i in range(len(functions)):
+        output += functions[i](E, T, EX[i], Gamma[i], sigma[i])
+    return output
 
 
-# == Plotting ==
-# Make x-axis array to plot from
-Earray = np.linspace(0.1,20,300)
+def f_fit_plot_singular(par, E = x_value, j=0):
+    """ make_fit currently supports up to 5 GLO/SLOs. To add more, continue the pattern. This 
+    was, suprisingly, the best solution I found atm working with the scipy-syntax. """
+
+    functions = p0_functions
+
+    T = par["T"]
+    EX = np.array([par["E0"], par["E1"], par["E2"], par["E3"]])#, par["E4"])
+    Gamma = np.array([par["Gamma0"], par["Gamma1"], par["Gamma2"], par["Gamma3"]])#, Gamma4])
+    sigma = np.array([par["Sigma0"], par["Sigma1"], par["Sigma2"], par["Sigma3"]])#, sigma4])
+
+    return functions[j](E, T, EX[j], Gamma[j], sigma[j])
+
+
+
+def f_residuals(parameters):
+    return (f_fit_total(parameters) - y_value)**2/(y_error**2)
+
+
+results = lmfit.minimize(fcn=f_residuals, params=params, method="least_squares")
+
+print(results.success)
+print(results.errorbars)
+print(results.chisqr)
+print(results.redchi)
+print(results.params.pretty_print())
+
+
+print("Chi square: ", results.redchi)
 
 # Initialize figure!
 plt.figure(figsize=(11,7))
 ax = plt.subplot(111)
-#rax= plt.axes([0.05, 30, 1e-9, 1e-7])
 
 
 # Actual best-fit curve
 # Extract values from the fit
 
-optimalized_tot = np.zeros(len(Earray))
-for j in range(int((len(popt)-1)/3)):
-    optimalized = p0_functions[j](Earray, popt[0], popt[j*3+1], popt[j*3+2], popt[j*3+3])
-    # Plot the separate GLOs
-    if "G" in list(str(p0_functions[j])):
-        plot_LO = ax.plot(Earray, optimalized, '--', color="grey", label="GLO")
-    elif "S" in list(str(p0_functions[j])):
-        plot_LO = ax.plot(Earray, optimalized, '-.', color="grey", label="SLO")
-    optimalized_tot += optimalized
 
 
 # Plot the total optimalized fit
-plot_fit = ax.plot(Earray, optimalized_tot, '-', color="cornflowerblue", label="Fitted")
+x_values_cont = np.linspace(0, 18, 1000)
+plot_fit = ax.plot(x_values_cont, f_fit_total(results.params, E=x_values_cont), '-', color="cornflowerblue", label="Fitted")#, linewidth="5")
+
+ax.plot(x_values_cont, f_fit_plot_singular(results.params, E=x_values_cont, j=0),':', color="lightgray", label=p0_functions_names[0])
+ax.plot(x_values_cont, f_fit_plot_singular(results.params, E=x_values_cont, j=1),'-.', color="lightgray", label=p0_functions_names[1])
+ax.plot(x_values_cont, f_fit_plot_singular(results.params, E=x_values_cont, j=2),'--', color="lightgray", label=p0_functions_names[2])
+ax.plot(x_values_cont, f_fit_plot_singular(results.params, E=x_values_cont, j=3),'-', color="lightgray", label=p0_functions_names[3])
+
 
 # Plot the data from this experiment
-oclplot = ax.errorbar(data[:,0], data[:,1], yerr=data[:,2], fmt='D', color=maincolor, label="This experiment") #"deeppink"
+oclplot = ax.errorbar(data[:,0], data[:,1], yerr=data[:,2], fmt='D', color=maincolor, label="%s, this experiment"%nuclei) #"deeppink"
+
+# Plot Sn for reference
+plt.plot([Sn, Sn],[2e-9, 9e-7], "b--", label="Sn")
 
 # Plot dataset 1 and 2 from exfor.
 plot_dataset1 = ax.errorbar(data_re187_1[:,0], data_re187_1[:,1], yerr=data_re187_1[:,2], fmt='X', color='deeppink', label="Goryachev, 1973")
 plot_dataset2 = ax.errorbar(data_re187_2[:,0], data_re187_2[:,1], yerr=data_re187_2[:,2], fmt='s', color='orange', label="Shizuma, 2005")
-
+print(data_re187_2[:,2]/data_re187_2[:,1])
 Alpha = 0.8
 #plot_Re185_dataset = ax.errorbar(data_re185[:,0], data_re185[:,1], yerr=data_re185[:,2], fmt='o', color='black', label="Re185", alpha=1)
 #plot_W186_dataset = ax.errorbar(data_w186[:,0], data_w186[:,1], yerr=data_w186[:,2], fmt='o', color='black', label="W186", alpha=1)
@@ -258,54 +313,113 @@ if plot_ARC == True:
     plot_ARC_M_Os191 = ax.errorbar(data_arc_M_Os191[:,0], data_arc_M_Os191[:,1], yerr=data_arc_M_Os191[:,2], fmt='v', color='fuchsia', label="ARC M1, Os191", alpha=Alpha)
 
 
-#print("Os188", data_arc_Os188)
-
-"""
-if reaction == "d":
-    plt.title("Fit for $^{188}$Re from (a,d)")
-elif reaction == "t":
-    plt.title("Fit for $^{187}$Re from (a,t)")
-elif reaction == "dt":
-    plt.title("Rough fit, for both 187Re and 188Re")
-"""
 
 plt.yscale("log")
 #plt.ylim([1e-10, 1e-5]) # Set y-axis limits
 plt.grid('on')
 plt.legend(loc="lower right")
-
-#plt.xaxis([-0.5,21])
-
+plt.ylim([5e-10,8e-6])
 plt.xlabel("E$_\gamma$ [MeV]", size=18) 
 plt.ylabel(" $\gamma$-ray strength function [MeV$^{-3}$]", size=18)
-
+if plot_ARC == True:
+    plt.savefig("png/gSF_fit_ARC_%s.png"%reaction)
+else:
+    plt.savefig("png/gSF_fit_%s.png"%reaction)
 plt.show()
 
 
+par_names = []
+par_values = []
+par_stderr = []
 
+for par, value in results.params.items():
+    par_names.append(par)
+    par_values.append(value.value)
+    par_stderr.append(value.stderr) 
+
+#print(par_names, par_values, par_stderr)
+#print(p0_functions)
+
+
+print("""
+
+################################################
+
+
+
+""")
+
+print(results.params.pretty_print())
+
+print("""
+
+################################################
+
+
+
+""")
+
+
+print("""\\begin{tabular}{llrrr}
+    \multicolumn{4}{l}{\\textbf{%s}} T = %3.3f \\\ \hline \hline 
+    \multicolumn{1}{l}{} & E & $\Gamma$ & $\sigma_0$ \\\ """ %(nuclei, par_values[0]))
+
+for j in range(1,5):
+    print("""   %s & $ %2.2f \\pm  %2.2f $ & $ %2.2f \\pm %2.2f $ & $ %3.3f \\pm %3.3f $ \\\ \\hline """ 
+    % (str(p0_functions_names[j-1]), par_values[j*3-2], par_stderr[j*3-2], par_values[j*3-1], par_stderr[j*3-1],par_values[j*3-0], par_stderr[j*3-0] )   ) 
+
+print("\end{tabular}")
+
+
+
+
+correlation_matrix = True
+if correlation_matrix:
+
+    plt.clf()
+    plt.figure(figsize=(11,7))
+    #plt.yscale("linear")
+    
+    R = results.params.valuesdict()
+    X = np.linspace(0.5,len(R)-0.5, len(R))
+    C = abs(results.covar)
+    
+    Keys = list(R.keys())
+    print(Keys)
+    if reaction == "t":
+        Keys = list(Keys[0]) + Keys[4:]
+        X = np.linspace(0.5,len(R)-3-0.5, len(R)-3)
+    plt.pcolormesh(C, cmap="jet", norm=LogNorm(vmin=abs(C.min()), vmax=abs(C.max()) )) #cmap="jet", 
+    plt.colorbar()#ticks=[1,5,10,50], format=LogFormatter(10))
+    #plt.plot(np.linspace(0,))
+    plt.xticks(X, list(Keys), rotation=-60, fontsize=12)
+    plt.yticks(X, list(Keys), fontsize=12)
+    plt.savefig("png/gSF_fit_covar_%s.png"%reaction)
+    plt.show()
+
+
+
+
+debug_mode=1
 if debug_mode:
     """ This plots out the initial guess and optimised parameters and their min/max limits for the fit.
     This is meant to """
     plt.clf()
+    plt.figure(figsize=(11,7))
+    
+    D = params.valuesdict()
+    X = range(len(D))
+    plt.plot(X, list(D.values()))#, align='center')
+    plt.xticks(X, list(D.keys()))
 
-    X = range(len(popt))
-    plt.plot(X, p0, label="Initial guess")
-    plt.plot(X, popt,"*-", label="Best fit")
+    R = results.params.valuesdict()
+    plt.plot(X, list(R.values()))#, align='center')
+    plt.xticks(X, list(R.keys()))
+
     plt.plot(X, minimum, color="grey", label="min")
     plt.plot(X, maximum, color="grey", label="max")
 
-    x_ticks_labels=["T", "E0", "Gamma0", "sigma0"]
-    if len(p0_functions) > 1:
-        x_ticks_labels += ["E1", "Gamma1", "sigma1"]
-    if len(p0_functions) > 2:
-        x_ticks_labels += ["E2", "Gamma2", "sigma2"]
-    if len(p0_functions) > 3:
-        x_ticks_labels += ["E3", "Gamma3", "sigma3"]
-    if len(p0_functions) > 4: # Fifth GLO
-        x_ticks_labels += ["E2", "Gamma4", "sigma4"]
-
-    plt.xticks(X, x_ticks_labels, rotation='vertical', fontsize=16)
     plt.yscale("log")
-    plt.legend()
+    plt.savefig("png/gSF_fit_parameterminmax_%s.png"%reaction)
     plt.show()
 

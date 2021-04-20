@@ -67,7 +67,7 @@ parameter ex_corr_exp    =  0 1 \
 
 
 #data directory Datafiles
-data directory ../master_data/raw
+data directory ../raw_data_186W
 #maximum number of buffers to read for each file; for testing
 #max_buffers 1
 

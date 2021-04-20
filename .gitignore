@@ -1,20 +1,23 @@
 
-usersort/*.root
-usersort/sorting
-usersort/user_sort.o
+**
+
+!README.md
+!Marianne_masteroppgave.pdf
 
 
-plot/data/*.json
 
-mama_d/*.ps
-mama_d/*.pdf
-mama_d/*.eps
+!calibration/**
+calibration/**.root
 
-mama_t/*.ps
-mama_t/*.pdf
-mama_t/*.eps
+!figures/**
 
-**.png
 
-plot/arcdrc/**
+
+
+
+
+
+
+
+
 

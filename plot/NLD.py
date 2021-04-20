@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 import stylesheet
 
@@ -34,7 +35,7 @@ def a_t():
 
     #rholev
     levels = rholev
-
+    
     # Normalisation point at Bn
     plt.plot(Bn, rho_Bn, "D", color=stylesheet.t_color_inter, label="rho from neutron res. data")
 
@@ -47,8 +48,9 @@ def a_t():
     plt.plot(energy[n0_CT:n1_CT], fermigas[n0_CT:n1_CT], "--", color=stylesheet.t_color_inter, label="CT interpolation")
 
     #This experiment!
-    plt.errorbar(energy[:len(rho)], rho, yerr=rhoerr[:-1], x_err=None, fmt="s", color=stylesheet.t_color_data, label="Oslo data for 187Re")
-
+    plt.errorbar(energy[:len(rho)-4], rho[:-4], yerr=rhoerr[:-5], x_err=None, fmt="s", color=stylesheet.t_color_data, label="Oslo data for 187Re")
+    
+    return energy, rho
 
 def a_d(): #color = green
     n = 30
@@ -76,7 +78,7 @@ def a_d(): #color = green
 
     #rholev
     levels = rholev
-
+    
     # Normalisation point at Bn
     plt.plot(Bn, rho_Bn, "v", color=stylesheet.d_color_inter, label="rho from neutron res. data")
 
@@ -90,9 +92,25 @@ def a_d(): #color = green
 
     #This experiment!
     plt.errorbar(energy[:len(rho)], rho, yerr=rhoerr[:-1], x_err=None, fmt="^", color=stylesheet.d_color_data, label="Oslo data for 188Re")
+    
+    return energy, rho
 
-a_t()
-a_d()
+
+energy_t, rho_t = a_t()
+energy_d, rho_d = a_d()
+
+max_len=min((len(rho_t), len(rho_d)))
+
+rt = rho_t[5:max_len-3]
+et = energy_t[5:max_len-3]
+
+rd = rho_d[5:max_len-3]
+ed = energy_d[5:max_len-3]
+
+std = np.sqrt(  np.sum((rd/rt)**2)/len(rd/rt) - np.mean(rd/rt)**2   )
+
+print(np.mean(rd/rt), " pm ", std)
+print(2.71828**2)
 
 #plt.title("NLD for 187 and 188 Re.", size=18)
 plt.ylabel(r'$\rho$ (E) [MeV$^{-1}$]', size=18)
@@ -102,4 +120,5 @@ plt.ylim(4., 1e8)
 plt.xlim(-1., 8.)
 plt.grid("on")
 plt.yscale("log")
+plt.savefig("png/NLD.png")
 plt.show()
