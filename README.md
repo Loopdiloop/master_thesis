@@ -24,3 +24,8 @@ A special thank you to my dear main supervisor Ann-Cecilie, you have been great!
 Any bug in the thesis is now a feature. 
 
 Cheers, Marianne.
+
+
+
+Edit: Forgot to mention usersort, but it does contain files and software for sorting the data.
+  Any input, .root or raw file is available upon request.
