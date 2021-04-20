@@ -8,7 +8,7 @@
    m = (TH1F*)gROOT->FindObject("h");
    if (m) m->Delete();
    TCanvas *c1 = new TCanvas("c1","Normalization of gamma-transmission coefficient",600,600);
-   TH2F *h = new TH2F("h"," ",10,-0.887500,   6.561,50,8.851e+00,3.339e+07);
+   TH2F *h = new TH2F("h"," ",10,-0.887500,   6.561,50,9.034e+00,3.349e+07);
    ifstream sigfile("sigpaw.cnt");
    float sig[28],sigerr[28];
    float energy[81],energyerr[81];
@@ -58,13 +58,13 @@
    extLgraph->DrawGraph(11,&extLgraph->GetX()[0],&extLgraph->GetY()[0],"L");
    extHgraph->SetLineStyle(1);
    extHgraph->DrawGraph(18,&extHgraph->GetX()[18],&extHgraph->GetY()[18],"L");
-   TArrow *arrow1 = new TArrow(1.097e+00,5.586e+03,1.097e+00,9.879e+02,0.02,">");
+   TArrow *arrow1 = new TArrow(1.097e+00,5.699e+03,1.097e+00,1.008e+03,0.02,">");
    arrow1->Draw();
-   TArrow *arrow2 = new TArrow(1.592e+00,1.732e+04,1.592e+00,3.063e+03,0.02,">");
+   TArrow *arrow2 = new TArrow(1.592e+00,1.764e+04,1.592e+00,3.118e+03,0.02,">");
    arrow2->Draw();
-   TArrow *arrow3 = new TArrow(3.576e+00,3.992e+05,3.576e+00,7.061e+04,0.02,">");
+   TArrow *arrow3 = new TArrow(3.576e+00,4.034e+05,3.576e+00,7.132e+04,0.02,">");
    arrow3->Draw();
-   TArrow *arrow4 = new TArrow(4.320e+00,1.347e+06,4.320e+00,2.383e+05,0.02,">");
+   TArrow *arrow4 = new TArrow(4.320e+00,1.358e+06,4.320e+00,2.400e+05,0.02,">");
    arrow4->Draw();
    c1->Update();
    c1->Print("sigext.pdf");

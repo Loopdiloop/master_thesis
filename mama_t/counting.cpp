@@ -8,7 +8,7 @@
    m = (TH1F*)gROOT->FindObject("h");
    if (m) m->Delete();
    TCanvas *c1 = new TCanvas("c1","Normalization of level density",600,600);
-   TH2F *h = new TH2F("h"," ",10,-0.887500,7.792500,50,0.326048,143900000.000000);
+   TH2F *h = new TH2F("h"," ",10,-0.887500,7.792500,50,0.334055,143900000.000000);
    ifstream rholev("rholev.cnt"), rhopaw("rhopaw.cnt"), fermi("fermigas.cnt");
    float levels[28],rho[28],rhoerr[28],energy[405],energyerr[405],fermigas[405];
    float Bn[1]={7.360000};
@@ -73,13 +73,13 @@
    TLatex t;
    t.SetTextSize(0.05);
    t.DrawLatex(    6.234,7.195e+07,"^{xx}Yy");
-   TArrow *arrow1 = new TArrow(0.352500,783.440013,0.352500,119.729080,0.02,">");
+   TArrow *arrow1 = new TArrow(0.352500,801.129097,0.352500,122.432411,0.02,">");
    arrow1->Draw();
-   TArrow *arrow2 = new TArrow(0.848500,2693.845131,0.848500,411.686401,0.02,">");
+   TArrow *arrow2 = new TArrow(0.848500,2749.348149,0.848500,420.168640,0.02,">");
    arrow2->Draw();
-   TArrow *arrow3 = new TArrow(3.328500,370053.572012,3.328500,56553.371094,0.02,">");
+   TArrow *arrow3 = new TArrow(3.328500,374044.456765,3.328500,57163.277344,0.02,">");
    arrow3->Draw();
-   TArrow *arrow4 = new TArrow(4.320500,2356995.227797,4.320500,360207.375000,0.02,">");
+   TArrow *arrow4 = new TArrow(4.320500,2373221.322324,4.320500,362687.125000,0.02,">");
    arrow4->Draw();
    c1->Update();
    c1->Print("counting.pdf");
