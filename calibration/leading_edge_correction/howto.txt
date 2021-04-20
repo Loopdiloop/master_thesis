@@ -1,0 +1,54 @@
+
+
+Approksimasjon fra SiRi paper(Guttormsen):
+t(E) = t0 + alpha/(E+beta) + gamma*E
+
+TF1* f3=new TF1("f3","200+[0]+ [1]/(x+[2])+[3]*x")
+
+
+****************************************
+Minimizer is Minuit / Migrad
+Chi2                      =     0.916493
+NDf                       =            8
+Edm                       =  1.65319e-08
+NCalls                    =          348
+p0                        =     -2.76639   +/-   3.14649     
+p1                        =      24027.1   +/-   8567.35     
+p2                        =       362.58   +/-   266.048     
+p3                        = -4.64305e-05   +/-   0.000362342 
+
+
+FIT 2:
+
+****************************************
+Minimizer is Minuit / Migrad
+Chi2                      =     0.774288
+NDf                       =           16
+Edm                       =  9.28014e-09
+NCalls                    =          294
+p0                        =     0.589716   +/-   0.430073    
+p1                        =      16054.1   +/-   665.932     
+p2                        =      96.2308   +/-   15.057      
+p3                        = -0.000373339   +/-   6.16178e-05 
+Info in <TCanvas::Print>: pdf file /home/marianne/Documents/MASTER/04timelineup/fit2.pdf has been created
+
+
+
+FIT 3: No. 2 was, though perfect for a,p  overfitted for a,d.
+Tried fitting for a,d from file W186_a_d_all_calib_overfitted
+
+
+
+****************************************
+Minimizer is Minuit / Migrad
+Chi2                      =      5.96719
+NDf                       =           13
+Edm                       =  1.06467e-09
+NCalls                    =          270
+p0                        =      4.14027   +/-   1.41109     
+p1                        =      12819.6   +/-   1765.32     
+p2                        =     -11.3002   +/-   38.5873     
+p3                        =  -0.00219191   +/-   0.000233123 
+Info in <TCanvas::Print>: pdf file /home/marianne/Documents/MASTER/04timelineup/fit3.pdf has been created
+
+
